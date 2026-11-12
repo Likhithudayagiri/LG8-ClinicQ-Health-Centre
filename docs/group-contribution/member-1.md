@@ -1,15 +1,16 @@
 # Group Member 1 Contribution Document
 
 ## Student Information
-- **Name:** [Student Name Placeholder - Member 1]
-- **Student ID:** [Student ID Placeholder]
+- **Group:** LG 8
+- **Name:** Likhith
+- **Student ID:** 252U1R3098
 - **Role:** Server & Route Architect
-- **Assigned Area:** Express Server Configuration, Middleware, Modular Route Organization, and Server Execution
+- **Assigned Area / Responsibility:** Server and Routes (Express Server Configuration, Middleware, Modular Route Organization, and Server Execution)
 
 ---
 
 ## 1. Assigned Responsibilities
-Member 1 took ownership of foundational server infrastructure, ensuring standard Express.js best practices, modular routing, and error handling:
+Likhith took ownership of foundational server infrastructure, ensuring standard Express.js best practices, modular routing, and error handling:
 1. Setting up the Express application (`server.js`).
 2. Configuring core middleware:
    - Built-in JSON body parser (`express.json()`).
@@ -91,7 +92,7 @@ Member 1 took ownership of foundational server infrastructure, ensuring standard
 ---
 
 ## 3. Demonstration & Viva Guide
-During the lab demonstration, Member 1 should explain:
+During the lab demonstration, Likhith should explain:
 1. **Why Express.js was chosen:** Lightweight, flexible, fast, and provides standard middleware chaining for REST services.
 2. **Modular Architecture:** Why routes are separated into `routes/rooms.js`, `routes/doctors.js`, and `routes/bookings.js` rather than dumping everything in `server.js` (separation of concerns, maintainability).
 3. **Middleware Execution Order:** Why `express.json()` and the logger must appear before routes, and why 404/500 handlers must be at the very bottom.

@@ -529,14 +529,17 @@ Failed: 0
 
 ## 13. Group Member Contributions
 
-| Member | Role | Key Contributions | Documentation File |
-|---|---|---|---|
-| **Member 1** | Server & Route Architect | Express configuration, middleware, modular routes, server startup | [`docs/group-contribution/member-1.md`](docs/group-contribution/member-1.md) |
-| **Member 2** | Database Engineer | SQLite configuration, 3 relational tables, foreign key constraints | [`docs/group-contribution/member-2.md`](docs/group-contribution/member-2.md) |
-| **Member 3** | REST API Developer | Room CRUD, Doctor endpoints, Booking endpoints, SQL JOIN | [`docs/group-contribution/member-3.md`](docs/group-contribution/member-3.md) |
-| **Member 4** | Validation & Search Specialist | Request validation, error handling, floor search (`?floor=...`) | [`docs/group-contribution/member-4.md`](docs/group-contribution/member-4.md) |
-| **Member 5** | QA & Special Twist Specialist | Allowed floor restriction (`Ground`, `First`, `Second`), 3 mandatory tests | [`docs/group-contribution/member-5.md`](docs/group-contribution/member-5.md) |
-| **Member 6** | Documentation & Postman Lead | Postman Collection, test runner, README documentation | [`docs/group-contribution/member-6.md`](docs/group-contribution/member-6.md) |
+### Group: LG 8
+
+| Member # | Name | Student ID | Assigned Responsibility | Documentation File |
+|:---:|:---|:---:|:---|:---|
+| **Member 1** | **Likhith** | `252U1R3098` | **Server and Routes** (Express configuration, middleware, modular routes, server startup) | [`docs/group-contribution/member-1.md`](docs/group-contribution/member-1.md) |
+| **Member 2** | **Bharath** | `252U1R3074` | **Database** (SQLite configuration, 3 relational tables, foreign key constraints) | [`docs/group-contribution/member-2.md`](docs/group-contribution/member-2.md) |
+| **Member 3** | **Tejaswini** | `252U1R3071` | **REST Endpoints** (Room CRUD, Doctor endpoints, Booking endpoints, SQL JOIN) | [`docs/group-contribution/member-3.md`](docs/group-contribution/member-3.md) |
+| **Member 4** | **Rudhra Sai** | `252U1R3069` | **Validation and Search** (Request validation, error handling, floor search `?floor=...`) | [`docs/group-contribution/member-4.md`](docs/group-contribution/member-4.md) |
+| **Member 5** | **Dinesh** | `252U1R3082` | **Special Twist and Allowed Floor Values** (Allowed floor restriction `Ground`, `First`, `Second`, 3 mandatory tests) | [`docs/group-contribution/member-5.md`](docs/group-contribution/member-5.md) |
+| **Member 6** | **Jaswanth** | `252U1R3094` | **Postman Collection and README** (Postman Collection authoring, test runner, technical documentation) | [`docs/group-contribution/member-6.md`](docs/group-contribution/member-6.md) |
 
 ---
 *ClinicQ Health Centre – LG 8 Backend Development Fundamentals Project.*
+

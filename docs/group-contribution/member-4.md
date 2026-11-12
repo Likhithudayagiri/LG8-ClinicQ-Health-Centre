@@ -1,15 +1,16 @@
 # Group Member 4 Contribution Document
 
 ## Student Information
-- **Name:** [Student Name Placeholder - Member 4]
-- **Student ID:** [Student ID Placeholder]
+- **Group:** LG 8
+- **Name:** Rudhra Sai
+- **Student ID:** 252U1R3069
 - **Role:** Validation & Search Specialist
-- **Assigned Area:** Request Validation, Error Handling Architecture, Floor Validation, and Search by Query Parameters
+- **Assigned Area / Responsibility:** Validation and Search (Request Validation, Error Handling Architecture, Floor Validation, and Search by Query Parameters)
 
 ---
 
 ## 1. Assigned Responsibilities
-Member 4 focused on system reliability, defensive programming, and query filtering:
+Rudhra Sai focused on system reliability, defensive programming, and query filtering:
 1. Designing and enforcing input validation across all endpoints:
    - Validating non-empty strings for names and descriptions.
    - Validating presence of required fields before executing database statements.
@@ -96,7 +97,7 @@ Member 4 focused on system reliability, defensive programming, and query filteri
 ---
 
 ## 3. Demonstration & Viva Guide
-During the lab demonstration, Member 4 should explain:
+During the lab demonstration, Rudhra Sai should explain:
 1. **Search Query Processing:** How `req.query.floor` is extracted from the URL query string (`/rooms/?floor=Ground`), validated, and injected safely into the SQL query using `[floor]` parameter binding.
 2. **Defensive Validation vs Database Failures:** Why application-level validation is essential. Catching invalid input in Express allows returning descriptive, friendly error messages to the client rather than letting the database throw opaque error codes.
 3. **Double Booking Scenarios:** Explain the two distinct conflict scenarios:

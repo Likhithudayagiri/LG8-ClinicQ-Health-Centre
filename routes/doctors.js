@@ -148,3 +148,4 @@ router.delete('/:doctorId', (req, res) => {
 });
 
 module.exports = router;
+

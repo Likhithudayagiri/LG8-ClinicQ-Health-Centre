@@ -95,3 +95,4 @@ module.exports = {
   initializeDatabase,
   dbPath
 };
+

@@ -1,15 +1,16 @@
 # Group Member 3 Contribution Document
 
 ## Student Information
-- **Name:** [Student Name Placeholder - Member 3]
-- **Student ID:** [Student ID Placeholder]
+- **Group:** LG 8
+- **Name:** Tejaswini
+- **Student ID:** 252U1R3071
 - **Role:** REST API Developer
-- **Assigned Area:** CRUD Operations for Rooms, Doctor Endpoints, Booking Flow, and SQL JOIN Implementation
+- **Assigned Area / Responsibility:** REST Endpoints (Room CRUD Operations, Doctor Endpoints, Booking Endpoints, and SQL JOIN Implementation)
 
 ---
 
 ## 1. Assigned Responsibilities
-Member 3 took responsibility for implementing core REST API endpoints and SQL querying logic across the system:
+Tejaswini took responsibility for implementing core REST API endpoints and SQL querying logic across the system:
 1. Room CRUD implementation (`routes/rooms.js`):
    - `GET /rooms/` (fetch all rooms).
    - `GET /rooms/:roomId/` (fetch single room).
@@ -105,7 +106,7 @@ Member 3 took responsibility for implementing core REST API endpoints and SQL qu
 ---
 
 ## 3. Demonstration & Viva Guide
-During the lab demonstration, Member 3 should explain:
+During the lab demonstration, Tejaswini should explain:
 1. **The SQL JOIN Mechanics:** Explain how an `INNER JOIN` matches `bookings.doctor_id` with `doctors.doctor_id` and `bookings.room_id` with `rooms.room_id` so that the client receives human-readable names (`doctor_name`, `room_name`) instead of raw integer IDs.
 2. **Parameterized Queries vs String Concatenation:** Explain why `?` placeholders are used with parameter arrays (`[roomId]`) rather than string template literals to completely prevent SQL Injection vulnerabilities.
 3. **HTTP Status Code Mapping:** Explain why:

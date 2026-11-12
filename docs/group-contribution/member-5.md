@@ -1,15 +1,16 @@
 # Group Member 5 Contribution Document
 
 ## Student Information
-- **Name:** [Student Name Placeholder - Member 5]
-- **Student ID:** [Student ID Placeholder]
+- **Group:** LG 8
+- **Name:** Dinesh
+- **Student ID:** 252U1R3082
 - **Role:** Quality Assurance & Special Twist Specialist
-- **Assigned Area:** Allowed Floor Restriction Enforcement, POST / PUT Validation Logic, and Verification of All Three Mandatory Twist Tests
+- **Assigned Area / Responsibility:** Special Twist and Allowed Floor Values (Allowed Floor Restriction Enforcement, POST / PUT Validation Logic, and Verification of All Three Mandatory Twist Tests)
 
 ---
 
 ## 1. Assigned Responsibilities
-Member 5 took full ownership of the assignment's core "Special Twist" and strict compliance testing:
+Dinesh took full ownership of the assignment's core "Special Twist" and strict compliance testing:
 1. Identifying the business rules for allowed floor values:
    - Permitted floors: `Ground`, `First`, `Second`.
    - Prohibited floors: Any other string or value (e.g. `Other`, `Basement`, `Third`).
@@ -106,7 +107,7 @@ Member 5 took full ownership of the assignment's core "Special Twist" and strict
 ---
 
 ## 3. Demonstration & Viva Guide
-During the lab demonstration, Member 5 should walk through the three mandatory tests:
+During the lab demonstration, Dinesh should walk through the three mandatory tests:
 1. **Mandatory Test 1 Demonstration:**
    - Execute `POST /rooms/` with body `{"room_name": "Consultation Room A", "floor": "Ground"}`.
    - Point out the `201 Created` status code and the created room object containing `room_id: 1`.

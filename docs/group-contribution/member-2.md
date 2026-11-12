@@ -1,15 +1,16 @@
 # Group Member 2 Contribution Document
 
 ## Student Information
-- **Name:** [Student Name Placeholder - Member 2]
-- **Student ID:** [Student ID Placeholder]
+- **Group:** LG 8
+- **Name:** Bharath
+- **Student ID:** 252U1R3074
 - **Role:** Database Engineer
-- **Assigned Area:** SQLite Database Configuration, Schema Design, Relationships, and Foreign Keys
+- **Assigned Area / Responsibility:** Database (SQLite Configuration, Creation of All Three Tables, Relationships, and Foreign Keys)
 
 ---
 
 ## 1. Assigned Responsibilities
-Member 2 was responsible for designing and implementing the persistent storage layer using SQLite:
+Bharath was responsible for designing and implementing the persistent storage layer using SQLite:
 1. Configuring the SQLite connection and file management (`database/clinicq.db` in `database.js`).
 2. Enabling SQLite foreign key constraint enforcement via `PRAGMA foreign_keys = ON;`.
 3. Designing and building the normalized relational schema consisting of three related tables:
@@ -85,7 +86,7 @@ Member 2 was responsible for designing and implementing the persistent storage l
 ---
 
 ## 3. Demonstration & Viva Guide
-During the lab demonstration, Member 2 should explain:
+During the lab demonstration, Bharath should explain:
 1. **SQLite Default Foreign Key Behavior:** By default, SQLite has foreign key checks *disabled* for backward compatibility. Explain how `PRAGMA foreign_keys = ON;` is explicitly executed right after opening the database handle to enforce referential integrity.
 2. **Double-Booking Prevention at Database Level:** Explain how the two composite unique constraints (`unique_room_booking_slot` and `unique_doctor_booking_slot`) ensure that even if concurrent requests were to pass application checks simultaneously, the relational database guarantees zero duplicate room or doctor bookings.
 3. **`ON DELETE RESTRICT` Behavior:** Explain why deleting a room or doctor that is currently referenced by an active booking is rejected by SQLite, preventing dangling foreign key references.

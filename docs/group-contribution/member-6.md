@@ -1,15 +1,16 @@
 # Group Member 6 Contribution Document
 
 ## Student Information
-- **Name:** [Student Name Placeholder - Member 6]
-- **Student ID:** [Student ID Placeholder]
+- **Group:** LG 8
+- **Name:** Jaswanth
+- **Student ID:** 252U1R3094
 - **Role:** Documentation & API QA Lead
-- **Assigned Area:** Postman Collection Authoring, Comprehensive Testing, Technical Documentation, and Installation Guide
+- **Assigned Area / Responsibility:** Postman Collection and README (Postman Collection Authoring, Comprehensive Testing, Technical Documentation, and Installation Guide)
 
 ---
 
 ## 1. Assigned Responsibilities
-Member 6 took charge of project deliverable presentation, end-to-end API documentation, Postman collection authoring, and installation guide:
+Jaswanth took charge of project deliverable presentation, end-to-end API documentation, Postman collection authoring, and installation guide:
 1. Authoring the complete, importable Postman Collection:
    - File: `postman/ClinicQ-Collection.json`
    - Formatted using Postman Collection Schema v2.1.0.
@@ -62,7 +63,7 @@ Member 6 took charge of project deliverable presentation, end-to-end API documen
   ```
 
 ### File: `README.md`
-- Authored 11 comprehensive sections covering problem statement, architecture, installation, database design, API docs, twist tests, conflict prevention, and Postman guide.
+- Authored 13 comprehensive sections covering problem statement, architecture, installation, database design, API docs, twist tests, conflict prevention, and Postman guide.
 
 ### File: `test-runner.js`
 - Automated test script validating status codes, headers, and response payloads across all 34 test cases.
@@ -70,7 +71,7 @@ Member 6 took charge of project deliverable presentation, end-to-end API documen
 ---
 
 ## 3. Demonstration & Viva Guide
-During the lab demonstration, Member 6 should explain:
+During the lab demonstration, Jaswanth should explain:
 1. **How to Import and Run the Postman Collection:**
    - Open Postman -> Click **Import** -> Select `postman/ClinicQ-Collection.json`.
    - Show the collection variable `baseUrl` set to `http://localhost:3000`.

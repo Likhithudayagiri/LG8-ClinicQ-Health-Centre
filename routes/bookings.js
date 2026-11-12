@@ -270,3 +270,4 @@ router.delete('/:bookingId', (req, res) => {
 });
 
 module.exports = router;
+
