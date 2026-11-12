@@ -1,0 +1,25 @@
+{
+  "name": "clinicq-health-centre",
+  "version": "1.0.0",
+  "description": "ClinicQ Health Centre Backend Application - LG 8 Backend Development Fundamentals",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test-runner.js",
+    "init-db": "node database.js"
+  },
+  "keywords": [
+    "express",
+    "sqlite3",
+    "clinicq",
+    "healthcare",
+    "rest-api"
+  ],
+  "author": "ClinicQ LG 8 Group",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.3.0",
+    "sqlite3": "^6.0.1"
+  }
+}

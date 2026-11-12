@@ -1,0 +1,451 @@
+{
+  "info": {
+    "_postman_id": "a9c2e4f0-459b-4b48-b4b1-8e5f2a1b9c3d",
+    "name": "ClinicQ Health Centre API - LG 8",
+    "description": "Postman Collection for ClinicQ Health Centre Consultation Room & Doctor Scheduling Backend System.\nIncludes all CRUD endpoints, search, validations, mandatory twist tests, conflict prevention tests, and the mandatory SQL JOIN endpoint.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Mandatory Twist Tests",
+      "description": "The three compulsory twist tests specified in Section 8.",
+      "item": [
+        {
+          "name": "TEST 1: POST /rooms/ (Ground floor) [Expected: 201 Created]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room_name\": \"Consultation Room A\",\n  \"floor\": \"Ground\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", ""]
+            },
+            "description": "TEST 1: Creates Consultation Room A on Ground floor. Expected HTTP Status: 201 Created."
+          },
+          "response": []
+        },
+        {
+          "name": "TEST 2: POST /rooms/ (Invalid floor: Other) [Expected: 400 Bad Request]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room_name\": \"Consultation Room B\",\n  \"floor\": \"Other\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", ""]
+            },
+            "description": "TEST 2: Attempts to create room with floor 'Other'. Expected HTTP Status: 400 Bad Request with error: 'Invalid floor. Allowed values are: Ground, First, Second'."
+          },
+          "response": []
+        },
+        {
+          "name": "TEST 3: PUT /rooms/1/ (Update floor to First) [Expected: 200 OK]",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room_name\": \"Consultation Room A\",\n  \"floor\": \"First\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", "1", ""]
+            },
+            "description": "TEST 3: Updates Room 1 floor to 'First'. Expected HTTP Status: 200 OK."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Rooms Management",
+      "description": "Room CRUD, floor search, and validation endpoints.",
+      "item": [
+        {
+          "name": "Get All Rooms [Expected: 200 OK]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rooms/",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", ""]
+            },
+            "description": "Retrieve all consultation rooms."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Rooms by Floor - Ground [Expected: 200 OK]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rooms/?floor=Ground",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", ""],
+              "query": [
+                {
+                  "key": "floor",
+                  "value": "Ground"
+                }
+              ]
+            },
+            "description": "Filter rooms located on the Ground floor."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Rooms by Invalid Floor [Expected: 400 Bad Request]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rooms/?floor=Basement",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", ""],
+              "query": [
+                {
+                  "key": "floor",
+                  "value": "Basement"
+                }
+              ]
+            },
+            "description": "Validate floor query parameter. Returns 400 Bad Request with allowed floor list."
+          },
+          "response": []
+        },
+        {
+          "name": "Get One Room By ID [Expected: 200 OK]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rooms/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", "1", ""]
+            },
+            "description": "Retrieve details of a single consultation room by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Room [Expected: 201 Created]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room_name\": \"Consultation Room B\",\n  \"floor\": \"Ground\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", ""]
+            },
+            "description": "Add a new consultation room with valid floor."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Room [Expected: 200 OK]",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room_name\": \"Consultation Room B - Renovated\",\n  \"floor\": \"Second\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/2/",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", "2", ""]
+            },
+            "description": "Update existing room name and floor."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Room [Expected: 200 OK or 400 if Booked]",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rooms/2/",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", "2", ""]
+            },
+            "description": "Delete a consultation room. Prohibited if referenced by existing booking."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Doctors Management",
+      "description": "Doctor registration and retrieval endpoints.",
+      "item": [
+        {
+          "name": "Get All Doctors [Expected: 200 OK]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors/",
+              "host": ["{{baseUrl}}"],
+              "path": ["doctors", ""]
+            },
+            "description": "Retrieve all registered doctors."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Doctor By ID [Expected: 200 OK]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["doctors", "1", ""]
+            },
+            "description": "Retrieve a single doctor by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Doctor [Expected: 201 Created]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor_name\": \"Dr. Sarah Jenkins\",\n  \"specialization\": \"Cardiology\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/doctors/",
+              "host": ["{{baseUrl}}"],
+              "path": ["doctors", ""]
+            },
+            "description": "Register a new doctor."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Doctor [Expected: 200 OK]",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor_name\": \"Dr. Sarah Jenkins-Smith\",\n  \"specialization\": \"Interventional Cardiology\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/doctors/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["doctors", "1", ""]
+            },
+            "description": "Update doctor details."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Doctor [Expected: 200 OK or 400 if Booked]",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["doctors", "1", ""]
+            },
+            "description": "Delete doctor record. Rejected if doctor has active bookings."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Bookings & Scheduling",
+      "description": "Booking creation, conflict detection, and JOIN endpoints.",
+      "item": [
+        {
+          "name": "Create Booking [Expected: 201 Created]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor_id\": 1,\n  \"room_id\": 1,\n  \"booking_date\": \"2026-11-20\",\n  \"booking_time\": \"10:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings/",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", ""]
+            },
+            "description": "Create a new consultation room booking."
+          },
+          "response": []
+        },
+        {
+          "name": "Conflict Test 1 - Same Room at Same Time [Expected: 400 Bad Request]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor_id\": 2,\n  \"room_id\": 1,\n  \"booking_date\": \"2026-11-20\",\n  \"booking_time\": \"10:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings/",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", ""]
+            },
+            "description": "Attempts to book Room 1 at the same date and time by a different doctor. Must be rejected with 400 Conflict."
+          },
+          "response": []
+        },
+        {
+          "name": "Conflict Test 2 - Same Doctor at Same Time [Expected: 400 Bad Request]",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor_id\": 1,\n  \"room_id\": 2,\n  \"booking_date\": \"2026-11-20\",\n  \"booking_time\": \"10:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings/",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", ""]
+            },
+            "description": "Attempts to schedule Doctor 1 for two different rooms at the exact same date and time. Must be rejected with 400 Conflict."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Bookings [Expected: 200 OK]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", ""]
+            },
+            "description": "Retrieve all booking records."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Booking Details via SQL JOIN [Expected: 200 OK]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/details/",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "details", ""]
+            },
+            "description": "Mandatory JOIN endpoint returning Booking ID, Booking date, Booking time, Doctor name, and Room name."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Booking By ID [Expected: 200 OK]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "1", ""]
+            },
+            "description": "Retrieve a specific booking by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel / Delete Booking [Expected: 200 OK]",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "1", ""]
+            },
+            "description": "Cancel a booking by ID."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
