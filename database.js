@@ -26,20 +26,51 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 
-// Enable SQLite Foreign Key constraints
-db.run('PRAGMA foreign_keys = ON;', (err) => {
-  if (err) {
-    console.error('Failed to enable foreign keys:', err.message);
-  } else {
-    console.log('SQLite foreign key constraints enabled.');
-  }
+// Configure connection-level pragmas: Enable Foreign Keys & set busy timeout
+db.serialize(() => {
+  db.run('PRAGMA foreign_keys = ON;', (err) => {
+    if (err) {
+      console.error('Failed to enable foreign keys:', err.message);
+    } else {
+      console.log('SQLite foreign key constraints enabled.');
+    }
+  });
+
+  db.run('PRAGMA busy_timeout = 3000;', (err) => {
+    if (err) {
+      console.error('Failed to set busy timeout:', err.message);
+    }
+  });
 });
 
-// Initialize database tables
+// Cache the initialization promise to guarantee idempotency and avoid duplicate concurrent DDL execution
+let initializationPromise = null;
+
+/**
+ * Initialize database schema:
+ * 1. Verifies/enables PRAGMA foreign_keys = ON
+ * 2. Creates doctors table with autoincrement primary key
+ * 3. Creates rooms table with floor CHECK constraint
+ * 4. Creates bookings table with FOREIGN KEY ON DELETE RESTRICT and UNIQUE slot constraints
+ * 5. Creates performance indexes on foreign key columns and schedule lookup dates
+ */
 function initializeDatabase() {
-  return new Promise((resolve, reject) => {
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  initializationPromise = new Promise((resolve, reject) => {
     db.serialize(() => {
-      // 1. Doctors Table
+      // Step 1: Ensure foreign key enforcement is active
+      db.run('PRAGMA foreign_keys = ON;', (pragmaErr) => {
+        if (pragmaErr) {
+          console.error('Failed to enforce foreign keys in initialization:', pragmaErr.message);
+          initializationPromise = null;
+          return reject(pragmaErr);
+        }
+      });
+
+      // Step 2: Doctors Table
       db.run(`
         CREATE TABLE IF NOT EXISTS doctors (
           doctor_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,11 +80,12 @@ function initializeDatabase() {
       `, (err) => {
         if (err) {
           console.error('Error creating doctors table:', err.message);
+          initializationPromise = null;
           return reject(err);
         }
       });
 
-      // 2. Rooms Table
+      // Step 3: Rooms Table with Floor CHECK Constraint
       db.run(`
         CREATE TABLE IF NOT EXISTS rooms (
           room_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,11 +95,12 @@ function initializeDatabase() {
       `, (err) => {
         if (err) {
           console.error('Error creating rooms table:', err.message);
+          initializationPromise = null;
           return reject(err);
         }
       });
 
-      // 3. Bookings Table with constraints
+      // Step 4: Bookings Table with Foreign Key Constraints & Composite UNIQUE Constraints
       db.run(`
         CREATE TABLE IF NOT EXISTS bookings (
           booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -83,6 +116,24 @@ function initializeDatabase() {
       `, (err) => {
         if (err) {
           console.error('Error creating bookings table:', err.message);
+          initializationPromise = null;
+          return reject(err);
+        }
+      });
+
+      // Step 5: Helpful Performance Indexes for Foreign Keys and Lookups
+      db.run('CREATE INDEX IF NOT EXISTS idx_bookings_doctor_id ON bookings(doctor_id);', (err) => {
+        if (err) console.error('Error creating doctor_id index:', err.message);
+      });
+
+      db.run('CREATE INDEX IF NOT EXISTS idx_bookings_room_id ON bookings(room_id);', (err) => {
+        if (err) console.error('Error creating room_id index:', err.message);
+      });
+
+      db.run('CREATE INDEX IF NOT EXISTS idx_bookings_schedule ON bookings(booking_date, booking_time);', (err) => {
+        if (err) {
+          console.error('Error creating schedule index:', err.message);
+          initializationPromise = null;
           return reject(err);
         }
         console.log('Database tables verified/created successfully.');
@@ -90,15 +141,83 @@ function initializeDatabase() {
       });
     });
   });
+
+  return initializationPromise;
 }
 
-// Auto-initialize when required or run
+/**
+ * Perform a database health check:
+ * - Checks PRAGMA foreign_keys status
+ * - Checks for any orphan foreign key violations
+ * - Checks database structural integrity
+ */
+function checkDatabaseHealth() {
+  return new Promise((resolve, reject) => {
+    db.serialize(() => {
+      db.get('PRAGMA foreign_keys;', (err, fkRow) => {
+        if (err) return reject(err);
+
+        db.all('PRAGMA foreign_key_check;', (fkCheckErr, violations) => {
+          if (fkCheckErr) return reject(fkCheckErr);
+
+          db.get('PRAGMA integrity_check;', (intErr, intRow) => {
+            if (intErr) return reject(intErr);
+
+            resolve({
+              foreignKeysEnabled: fkRow && (fkRow.foreign_keys === 1 || Object.values(fkRow)[0] === 1),
+              foreignKeyViolations: violations ? violations.length : 0,
+              integrity: intRow ? (intRow.integrity_check || Object.values(intRow)[0]) : 'unknown',
+              databasePath: dbPath
+            });
+          });
+        });
+      });
+    });
+  });
+}
+
+/**
+ * Cleanly close the database connection
+ */
+function closeDatabase() {
+  return new Promise((resolve, reject) => {
+    if (!db || typeof db.close !== 'function') {
+      return resolve();
+    }
+    db.close((err) => {
+      if (err) return reject(err);
+      resolve();
+    });
+  });
+}
+
+// Auto-initialize when required or executed
 initializeDatabase().catch((err) => {
   console.error('Database initialization error:', err);
 });
 
+// Clean CLI execution handling for "npm run init-db" or "node database.js"
+if (require.main === module) {
+  initializeDatabase()
+    .then(() => checkDatabaseHealth())
+    .then((health) => {
+      console.log('Database initialization completed successfully.');
+      console.log('Database health diagnostics:', health);
+      return closeDatabase();
+    })
+    .then(() => {
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error('Database initialization failed:', err);
+      process.exit(1);
+    });
+}
+
 module.exports = {
   db,
   initializeDatabase,
-  dbPath
+  dbPath,
+  checkDatabaseHealth,
+  closeDatabase
 };
