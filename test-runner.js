@@ -1,9 +1,16 @@
-const { app } = require('./server');
-const { db, initializeDatabase } = require('./database');
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 
-const PORT = 3001; // Use port 3001 for test runner to avoid port collisions
+// STEP 1: Select separate test database BEFORE importing server.js or database.js
+const TEST_DB_PATH = path.join(__dirname, 'database', 'clinicq-test.db');
+process.env.NODE_ENV = 'test';
+process.env.DB_PATH = TEST_DB_PATH;
+
+// STEP 2: Import server and database modules (connected strictly to clinicq-test.db)
+const { app } = require('./server');
+const { db, initializeDatabase, dbPath } = require('./database');
+
+const PORT = 3001; // Isolated port for test runner to avoid port collisions
 const BASE_URL = `http://localhost:${PORT}`;
 
 async function runTests() {
@@ -11,9 +18,16 @@ async function runTests() {
   console.log('   ClinicQ Health Centre - Automated Test Runner     ');
   console.log('=====================================================\n');
 
-  // Initialize DB and clean up tables for fresh predictable test run
+  console.log(`[Test Config] Target Database: ${dbPath}`);
+  if (!dbPath.endsWith('clinicq-test.db')) {
+    console.error('CRITICAL SAFETY FAILURE: Test runner is not using clinicq-test.db!');
+    process.exit(1);
+  }
+  console.log('[Test Config] Confirmed: Development database (clinicq.db) is protected and untouched.\n');
+
+  // Initialize DB and clean up tables exclusively in clinicq-test.db for a predictable test run
   await initializeDatabase();
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.serialize(() => {
       db.run('DELETE FROM bookings', () => {});
       db.run('DELETE FROM rooms', () => {});
@@ -51,7 +65,7 @@ async function runTests() {
     assert(rootRes.status === 200 && rootData.project === 'ClinicQ Health Centre', 'GET / returns 200 and project status');
 
     // ----------------------------------------------------
-    // Section B: MANDATORY TWIST TESTS
+    // Section B: MANDATORY TWIST TESTS (Section 8)
     // ----------------------------------------------------
     console.log('\n--- Testing Mandatory Twist Tests (Section 8) ---');
 
@@ -351,4 +365,3 @@ if (require.main === module) {
 }
 
 module.exports = { runTests };
-

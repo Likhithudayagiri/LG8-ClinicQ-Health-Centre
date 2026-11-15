@@ -2,13 +2,20 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
 
-// Ensure database directory exists
-const dbDir = path.join(__dirname, 'database');
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+// Ensure default database directory exists
+const defaultDbDir = path.join(__dirname, 'database');
+if (!fs.existsSync(defaultDbDir)) {
+  fs.mkdirSync(defaultDbDir, { recursive: true });
 }
 
-const dbPath = path.join(dbDir, 'clinicq.db');
+// Configurable database file path via environment variable (CLINICQ_DB_PATH or DB_PATH)
+const dbPath = process.env.CLINICQ_DB_PATH || process.env.DB_PATH || path.join(defaultDbDir, 'clinicq.db');
+
+// Ensure directory for resolved dbPath exists
+const targetDir = path.dirname(dbPath);
+if (!fs.existsSync(targetDir)) {
+  fs.mkdirSync(targetDir, { recursive: true });
+}
 
 // Create and configure database connection
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -95,4 +102,3 @@ module.exports = {
   initializeDatabase,
   dbPath
 };
-

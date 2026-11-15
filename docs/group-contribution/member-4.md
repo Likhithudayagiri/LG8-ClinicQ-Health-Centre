@@ -5,35 +5,39 @@
 - **Name:** Rudhra Sai
 - **Student ID:** 252U1R3069
 - **Role:** Validation & Search Specialist
-- **Assigned Area / Responsibility:** Validation and Search (Request Validation, Error Handling Architecture, Floor Validation, and Search by Query Parameters)
+- **Assigned Focus Area:** Validation and Search (Request Validation, Error Handling Architecture, Floor Validation, and Search by Query Parameters)
+
+---
+
+> **Collaborative Project Statement:**  
+> The ClinicQ Health Centre backend was designed, implemented, and tested as a unified team effort by all six members of Group LG 8. Within this collaborative framework, Rudhra Sai was assigned primary responsibility for input validation logic, defensive scheduling checks, query filtering implementation, and structured error responses.
 
 ---
 
 ## 1. Assigned Responsibilities
-Rudhra Sai focused on system reliability, defensive programming, and query filtering:
-1. Designing and enforcing input validation across all endpoints:
-   - Validating non-empty strings for names and descriptions.
-   - Validating presence of required fields before executing database statements.
-   - Validating numeric formats for ID parameters and foreign keys.
-2. Implementing the Floor Search feature:
-   - `GET /rooms/?floor=Ground`
-   - Dynamically filtering rooms matching the specified floor value.
-3. Implementing query-parameter validation:
-   - Ensuring that if a query parameter `?floor=...` is provided, it is checked against allowed values.
-   - Rejecting invalid search queries (e.g. `?floor=Basement` or `?floor=Roof`) with HTTP 400 Bad Request and the required error message.
-4. Implementing conflict validation for bookings:
-   - Preventing room double-booking conflicts before SQL insertion.
-   - Preventing doctor double-booking conflicts before SQL insertion.
-5. Referential integrity deletion guards:
-   - Checking whether a room or doctor is referenced in `bookings` before attempting `DELETE`.
-   - Returning user-friendly HTTP 400 error messages instead of cryptic database errors.
+As the Validation and Search specialist for LG 8, Rudhra Sai's assigned responsibilities included:
+1. **Input Validation Logic:**
+   - Validating non-empty strings for names, specialties, dates, and times.
+   - Checking presence of required fields before invoking database drivers.
+   - Validating numeric formats for ID parameters.
+2. **Floor Search Feature (`GET /rooms/?floor=Ground`):**
+   - Extracting `req.query.floor` from query strings.
+   - Filtering rooms matching the requested floor value.
+3. **Query Parameter Validation:**
+   - Validating `floor` query values against allowed list (`Ground`, `First`, `Second`).
+   - Rejecting invalid search queries (e.g., `?floor=Roof` or `?floor=Basement`) with HTTP 400 Bad Request and listing all allowed floor options.
+4. **Application-Level Conflict Detection for Bookings:**
+   - Checking if a room is already reserved at the given date and time, returning descriptive HTTP 400 error.
+   - Checking if a doctor is already scheduled for another consultation at the given date and time, returning descriptive HTTP 400 error.
+5. **Referential Deletion Protection:**
+   - Checking if a room or doctor is referenced in existing bookings before executing deletion, preventing database foreign key constraint crashes with clean user-facing error messages.
 
 ---
 
-## 2. Contributed Files and Code Sections
+## 2. Key Code Sections & Contributions
 
 ### File: `routes/rooms.js` (Search by Floor & Query Validation)
-- **Search and Query Parameter Logic:**
+- **Search Logic & Validation:**
   ```javascript
   const ALLOWED_FLOORS = ['Ground', 'First', 'Second'];
   const INVALID_FLOOR_ERROR = 'Invalid floor. Allowed values are: Ground, First, Second';
@@ -89,7 +93,7 @@ Rudhra Sai focused on system reliability, defensive programming, and query filte
           error: 'Conflict: The doctor already has a booking scheduled for this date and time.'
         });
       }
-      // Validation passed; proceed with booking
+      // Validations passed; proceed to insert booking
     });
   });
   ```
@@ -97,29 +101,31 @@ Rudhra Sai focused on system reliability, defensive programming, and query filte
 ---
 
 ## 3. Demonstration & Viva Guide
-During the lab demonstration, Rudhra Sai should explain:
-1. **Search Query Processing:** How `req.query.floor` is extracted from the URL query string (`/rooms/?floor=Ground`), validated, and injected safely into the SQL query using `[floor]` parameter binding.
-2. **Defensive Validation vs Database Failures:** Why application-level validation is essential. Catching invalid input in Express allows returning descriptive, friendly error messages to the client rather than letting the database throw opaque error codes.
-3. **Double Booking Scenarios:** Explain the two distinct conflict scenarios:
-   - Scenario A: Room already occupied at specified date/time.
-   - Scenario B: Doctor already assigned to a different room at specified date/time.
-4. **Validation Status Codes:** Why `400 Bad Request` is the standard RFC HTTP status code for client validation failures.
+During the lab evaluation, Rudhra Sai should demonstrate and explain:
+1. **Query Extraction & Validation:** How Express handles `req.query.floor` when a client requests `GET /rooms/?floor=Ground`, and how the validation guard immediately rejects illegal values like `?floor=Roof` with HTTP 400.
+2. **Defensive Validation vs Raw Database Errors:** Why application-level validation must catch errors before SQL execution (delivers readable, friendly JSON error messages rather than unformatted database constraint exceptions).
+3. **The Two Invariant Conflict Scenarios:** Explain clearly:
+   - *Conflict Scenario 1:* Room collision (two doctors attempting to use the same room at the same date and time).
+   - *Conflict Scenario 2:* Doctor collision (a single doctor double-booked in two rooms at the same date and time).
 
 ---
 
-## 4. Screenshot Placeholders
+## 4. Placeholders for Genuine Student Evidence
 
-### Screenshot 4.1: Valid Search by Floor (`GET /rooms/?floor=Ground`)
+### Evidence 4.1: Valid Floor Search Output
+*Place genuine Postman screenshot for `GET /rooms/?floor=Ground`:*
 ```
-[ PLACEHOLDER: Screenshot of Postman searching `GET /rooms/?floor=Ground` returning only rooms where floor is "Ground" ]
-```
-
-### Screenshot 4.2: Invalid Search Query Validation (`GET /rooms/?floor=Basement`)
-```
-[ PLACEHOLDER: Screenshot of Postman requesting `GET /rooms/?floor=Basement` returning HTTP 400 Bad Request with error: "Invalid floor. Allowed values are: Ground, First, Second" ]
+[ PLACEHOLDER: Insert screenshot of GET http://localhost:3000/rooms/?floor=Ground returning only rooms where floor is "Ground" with HTTP 200 OK ]
 ```
 
-### Screenshot 4.3: Booking Conflict Error Response
+### Evidence 4.2: Invalid Floor Search Rejection
+*Place genuine Postman screenshot for `GET /rooms/?floor=Roof`:*
 ```
-[ PLACEHOLDER: Screenshot of Postman attempting a conflicting booking and receiving HTTP 400 with "Conflict: The selected room is already booked..." ]
+[ PLACEHOLDER: Insert screenshot of GET http://localhost:3000/rooms/?floor=Roof returning HTTP 400 with "Invalid floor. Allowed values are: Ground, First, Second" ]
+```
+
+### Evidence 4.3: Booking Conflict Rejection
+*Place genuine Postman screenshot for duplicate booking rejection:*
+```
+[ PLACEHOLDER: Insert screenshot of POST /bookings/ conflict response returning HTTP 400 with "Conflict: The selected room is already booked by another doctor..." ]
 ```

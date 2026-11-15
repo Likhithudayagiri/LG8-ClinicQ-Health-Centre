@@ -5,33 +5,39 @@
 - **Name:** Likhith
 - **Student ID:** 252U1R3098
 - **Role:** Server & Route Architect
-- **Assigned Area / Responsibility:** Server and Routes (Express Server Configuration, Middleware, Modular Route Organization, and Server Execution)
+- **Assigned Focus Area:** Server and Routes (Express Server Configuration, Middleware, Modular Route Organization, and Server Execution)
+
+---
+
+> **Collaborative Project Statement:**  
+> The ClinicQ Health Centre backend was designed, implemented, and tested as a unified team effort by all six members of Group LG 8. Within this collaborative framework, Likhith was assigned primary responsibility for the Express server architecture, middleware pipeline, route structure, and application lifecycle.
 
 ---
 
 ## 1. Assigned Responsibilities
-Likhith took ownership of foundational server infrastructure, ensuring standard Express.js best practices, modular routing, and error handling:
-1. Setting up the Express application (`server.js`).
-2. Configuring core middleware:
-   - Built-in JSON body parser (`express.json()`).
-   - Global request logging middleware for debugging and audit trails.
-   - Centralized 404 handler for unmatched routes.
-   - Centralized 500 global error-handling middleware.
-3. Establishing clean and decoupled route architecture by mounting:
-   - `/rooms` router (`routes/rooms.js`).
-   - `/doctors` router (`routes/doctors.js`).
-   - `/bookings` router (`routes/bookings.js`).
-4. Creating the root welcome endpoint (`GET /`) delivering API metadata, status, and route directory.
-5. Managing server lifecycle, environment-driven ports (`process.env.PORT || 3000`), and integration with database initialization before listening.
+As the Server and Routes specialist for LG 8, Likhith's assigned responsibilities included:
+1. **Server Setup & Configuration (`server.js`):** Bootstrapping the Express application with environment-driven port binding (`process.env.PORT || 3000`).
+2. **Middleware Pipeline:**
+   - Standard JSON request parsing via `express.json()`.
+   - Custom timestamped request logging middleware for auditing incoming HTTP traffic.
+   - Centralized 404 handler for catching unmatched routes.
+   - Centralized 500 error handler for uncaught server exceptions.
+3. **Modular Route Decoupling:** Connecting and organizing distinct route modules:
+   - `/rooms` mounted to `routes/rooms.js`
+   - `/doctors` mounted to `routes/doctors.js`
+   - `/bookings` mounted to `routes/bookings.js`
+4. **Welcome / Discovery Endpoint (`GET /`):** Providing API health status, metadata, and an interactive routing directory.
+5. **Application Lifecycle Management:** Ensuring asynchronous database initialization (`initializeDatabase()`) resolves successfully before accepting HTTP connections.
 
 ---
 
-## 2. Contributed Files and Code Sections
+## 2. Key Code Sections & Contributions
 
 ### File: `server.js`
-- **Application Bootstrapping & Middleware Pipeline:**
+- **Application Configuration & Middleware:**
   ```javascript
   const express = require('express');
+  const path = require('path');
   const { db, initializeDatabase } = require('./database');
 
   const doctorsRouter = require('./routes/doctors');
@@ -41,10 +47,10 @@ Likhith took ownership of foundational server infrastructure, ensuring standard 
   const app = express();
   const PORT = process.env.PORT || 3000;
 
-  // Middleware for parsing incoming JSON bodies
+  // Middleware for parsing JSON request bodies
   app.use(express.json());
 
-  // Logging middleware
+  // Request logging middleware
   app.use((req, res, next) => {
     const timestamp = new Date().toISOString();
     console.log(`[${timestamp}] ${req.method} ${req.originalUrl}`);
@@ -52,38 +58,25 @@ Likhith took ownership of foundational server infrastructure, ensuring standard 
   });
   ```
 
-- **Modular Route Mounting:**
+- **Route Decoupling:**
   ```javascript
+  // Mount modular routes
   app.use('/rooms', roomsRouter);
   app.use('/doctors', doctorsRouter);
   app.use('/bookings', bookingsRouter);
   ```
 
-- **Centralized Error and Fallback Handlers:**
-  ```javascript
-  // 404 handler
-  app.use((req, res) => {
-    res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
-  });
-
-  // Global 500 handler
-  app.use((err, req, res, next) => {
-    console.error('Unhandled server error:', err);
-    res.status(500).json({ error: 'Internal server error', message: err.message });
-  });
-  ```
-
-- **Graceful Lifecycle Start:**
+- **Lifecycle Synchronization:**
   ```javascript
   if (require.main === module) {
     initializeDatabase()
       .then(() => {
-        app.listen(PORT, () => {
-          console.log(`ClinicQ Health Centre server running on http://localhost:${PORT}`);
+        server = app.listen(PORT, () => {
+          console.log(`ClinicQ Health Centre server is running on http://localhost:${PORT}`);
         });
       })
       .catch((err) => {
-        console.error('Failed to initialize database before startup:', err);
+        console.error('Failed to initialize database before server startup:', err);
         process.exit(1);
       });
   }
@@ -92,27 +85,34 @@ Likhith took ownership of foundational server infrastructure, ensuring standard 
 ---
 
 ## 3. Demonstration & Viva Guide
-During the lab demonstration, Likhith should explain:
-1. **Why Express.js was chosen:** Lightweight, flexible, fast, and provides standard middleware chaining for REST services.
-2. **Modular Architecture:** Why routes are separated into `routes/rooms.js`, `routes/doctors.js`, and `routes/bookings.js` rather than dumping everything in `server.js` (separation of concerns, maintainability).
-3. **Middleware Execution Order:** Why `express.json()` and the logger must appear before routes, and why 404/500 handlers must be at the very bottom.
-4. **Lifecycle Order:** Why `initializeDatabase()` is resolved *before* `app.listen()` to prevent accepting requests against uninitialized database tables.
+During the lab evaluation, Likhith should demonstrate and explain:
+1. **Middleware Ordering in Express:** Explain why `express.json()` and the custom logger must be registered before route handlers, and why 404 and error-handling middleware must be placed at the very end.
+2. **Benefits of Modular Routing:** Explain the advantages of `express.Router()` over placing all routes in a single monolith file (separation of concerns, parallel group work, cleaner testing).
+3. **Database Pre-Conditioning:** Explain why the database initialization promise must resolve before `app.listen()` is called (prevents race conditions where queries arrive before SQLite tables are created).
+4. **Error Handling Architecture:** How unhandled errors pass to the global error middleware via `next(err)` to prevent process crashes.
 
 ---
 
-## 4. Screenshot Placeholders
+## 4. Placeholders for Genuine Student Evidence
 
-### Screenshot 1.1: Server Startup in Terminal
+### Evidence 1.1: Server Execution Console Log
+*Place genuine terminal output captured when executing `npm start` here:*
 ```
-[ PLACEHOLDER: Screenshot of `npm start` displaying database connection and "ClinicQ Health Centre server is running on http://localhost:3000" ]
+[ PLACEHOLDER: Paste actual terminal output showing:
+  - Database connection confirmation
+  - Foreign keys enabled confirmation
+  - Table initialization confirmation
+  - "ClinicQ Health Centre server is running on http://localhost:3000" ]
 ```
 
-### Screenshot 1.2: Root API Response (`GET /`)
+### Evidence 1.2: Root Discovery Route (`GET /`)
+*Place genuine Postman or browser screenshot here:*
 ```
-[ PLACEHOLDER: Screenshot of Postman or browser visiting `http://localhost:3000/` showing the welcome JSON response with endpoint documentation ]
+[ PLACEHOLDER: Insert screenshot of GET http://localhost:3000/ returning HTTP 200 with the full endpoint directory JSON ]
 ```
 
-### Screenshot 1.3: 404 Handler Verification
+### Evidence 1.3: 404 Route Fallback
+*Place genuine Postman screenshot for an unmapped route here:*
 ```
-[ PLACEHOLDER: Screenshot of Postman requesting an unknown route like `GET /unknown-route` receiving HTTP 404 with structured JSON ]
+[ PLACEHOLDER: Insert screenshot of GET http://localhost:3000/non-existent-route returning HTTP 404 with structured error message ]
 ```

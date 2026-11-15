@@ -160,11 +160,24 @@ clinicQ-health-centre/
    ```
 
 2. **Install project dependencies:**
+   For a clean, reproducible installation matching `package-lock.json`:
+   ```bash
+   npm ci
+   ```
+   Or standard install:
    ```bash
    npm install
    ```
 
-3. **Initialize the SQLite database:**
+3. **Database Configuration:**
+   By default, the database is located at `database/clinicq.db`.
+   You can optionally configure a custom database path using the `CLINICQ_DB_PATH` or `DB_PATH` environment variable:
+   ```bash
+   # Windows PowerShell example:
+   $env:DB_PATH="database/clinicq.db"
+   ```
+
+4. **Initialize the SQLite database:**
    ```bash
    npm run init-db
    ```
@@ -454,16 +467,21 @@ The repository includes a ready-to-import Postman v2.1.0 collection at:
 
 ## 12. Automated Testing & Verification
 
-An automated test suite is provided to verify all 34 requirements and status codes:
+An automated test suite is provided to verify all 34 requirements and status codes.
+The test runner automatically targets an isolated test database (`database/clinicq-test.db`), ensuring that the development/production database (`database/clinicq.db`) is **never modified or cleared** during test execution.
+
 ```bash
 npm test
 ```
 
-### Test Suite Output:
+### Test Suite Execution Output:
 ```
 =====================================================
    ClinicQ Health Centre - Automated Test Runner     
 =====================================================
+
+[Test Config] Target Database: .../database/clinicq-test.db
+[Test Config] Confirmed: Development database (clinicq.db) is protected and untouched.
 
 --- Testing System Info & Root Endpoint ---
   [PASS] GET / returns 200 and project status

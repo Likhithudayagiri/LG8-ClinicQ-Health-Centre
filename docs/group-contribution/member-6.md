@@ -5,41 +5,39 @@
 - **Name:** Jaswanth
 - **Student ID:** 252U1R3094
 - **Role:** Documentation & API QA Lead
-- **Assigned Area / Responsibility:** Postman Collection and README (Postman Collection Authoring, Comprehensive Testing, Technical Documentation, and Installation Guide)
+- **Assigned Focus Area:** Postman Collection and README (Postman Collection Authoring, Comprehensive Testing, Technical Documentation, and Installation Guide)
+
+---
+
+> **Collaborative Project Statement:**  
+> The ClinicQ Health Centre backend was designed, implemented, and tested as a unified team effort by all six members of Group LG 8. Within this collaborative framework, Jaswanth was assigned primary responsibility for the Postman test collection, technical documentation, installation guides, and test runner verification.
 
 ---
 
 ## 1. Assigned Responsibilities
-Jaswanth took charge of project deliverable presentation, end-to-end API documentation, Postman collection authoring, and installation guide:
-1. Authoring the complete, importable Postman Collection:
-   - File: `postman/ClinicQ-Collection.json`
-   - Formatted using Postman Collection Schema v2.1.0.
-   - Configured with environment variable `{{baseUrl}}` defaulting to `http://localhost:3000`.
-   - Organized into logical folders:
-     1. Mandatory Twist Tests
-     2. Rooms Management
-     3. Doctors Management
-     4. Bookings & Scheduling
-2. Documenting every single request with:
-   - Clear descriptions.
-   - Sample request payloads.
-   - Expected HTTP response status codes (`200`, `201`, `400`, `404`).
-3. Authoring the comprehensive, professional project `README.md`:
-   - System introduction and problem statement scenario.
-   - Technologies used and architectural overview.
-   - Relational database schema with ASCII ER diagrams.
-   - Complete endpoint reference tables.
-   - Step-by-step installation and running instructions.
-   - Step-by-step Postman collection import and execution guide.
-   - Automated testing instructions (`npm test`).
-4. Designing and executing the automated verification suite (`test-runner.js`) ensuring all 34 assertions pass.
+As the Documentation and Postman lead for LG 8, Jaswanth's assigned responsibilities included:
+1. **Postman Collection Authoring (`postman/ClinicQ-Collection.json`):**
+   - Structuring a complete, importable collection compliant with Postman Collection Schema v2.1.0.
+   - Configuring collection variable `baseUrl` defaulted to `http://localhost:3000`.
+   - Organizing requests into four structured folders:
+     1. Mandatory Twist Tests (Tests 1, 2, and 3)
+     2. Rooms Management (CRUD, floor search, invalid search)
+     3. Doctors Management (CRUD, validation)
+     4. Bookings & Scheduling (Creation, room conflict, doctor conflict, SQL JOIN, cancellation)
+2. **Comprehensive Request Documentation in Postman:**
+   - Pre-configuring sample JSON request payloads.
+   - Documenting expected status codes (`200`, `201`, `400`, `404`).
+3. **Comprehensive Project `README.md`:**
+   - Authoring complete project documentation covering system architecture, problem scenario, schema diagrams, endpoint references, installation steps, and test instructions.
+4. **Automated Test Suite Verification:**
+   - Overseeing automated testing (`test-runner.js`), ensuring all 34 assertions execute and pass against the isolated test database `clinicq-test.db`.
 
 ---
 
-## 2. Contributed Files and Code Sections
+## 2. Key Code Sections & Contributions
 
 ### File: `postman/ClinicQ-Collection.json`
-- **Postman Collection Structure (Excerpt):**
+- **Postman Collection Architecture:**
   ```json
   {
     "info": {
@@ -63,46 +61,57 @@ Jaswanth took charge of project deliverable presentation, end-to-end API documen
   ```
 
 ### File: `README.md`
-- Authored 13 comprehensive sections covering problem statement, architecture, installation, database design, API docs, twist tests, conflict prevention, and Postman guide.
-
-### File: `test-runner.js`
-- Automated test script validating status codes, headers, and response payloads across all 34 test cases.
+- Authored 13 comprehensive sections:
+  1. Project Introduction
+  2. Problem Statement
+  3. Technologies Used
+  4. Database Design & Schema (with ASCII ER Diagram)
+  5. Project Structure
+  6. Installation Instructions (`npm ci`, `npm install`)
+  7. How to Run the Server (`npm start`)
+  8. API Endpoints Reference Tables
+  9. Sample Requests and Responses
+  10. Validation Rules & Special Twist
+  11. How to Import and Execute the Postman Collection
+  12. Automated Testing & Verification (`npm test`)
+  13. Group Member Contributions Table
 
 ---
 
 ## 3. Demonstration & Viva Guide
-During the lab demonstration, Jaswanth should explain:
-1. **How to Import and Run the Postman Collection:**
+During the lab evaluation, Jaswanth should demonstrate and explain:
+1. **Importing the Postman Collection:**
    - Open Postman -> Click **Import** -> Select `postman/ClinicQ-Collection.json`.
-   - Show the collection variable `baseUrl` set to `http://localhost:3000`.
-   - Run the collection using the Postman Collection Runner or execute individual requests.
-2. **Postman Collection Organization:**
-   - Folder 1 isolates the three mandatory twist tests so the evaluator can test compliance immediately.
-   - Folder 2 tests room CRUD and search queries.
-   - Folder 3 tests doctor creation and retrieval.
-   - Folder 4 tests booking creation, conflicts, and the mandatory SQL JOIN.
-3. **Automated Test Suite Execution:**
-   - Run `npm test` in the terminal to demonstrate that all 34 unit/integration test assertions pass with 0 failures.
-4. **How to Install & Run from Scratch:**
-   - `git clone <repo>`
-   - `npm install`
-   - `npm start`
+   - Inspect the collection variable `baseUrl` (`http://localhost:3000`).
+2. **Executing the Postman Collection Runner:**
+   - Run the entire collection using Postman's Collection Runner.
+   - Show how all requests return expected status codes (`201` for creations, `400` for validations/conflicts, `200` for successful retrievals).
+3. **Automated Test Suite (`npm test`):**
+   - Run `npm test` in the terminal to demonstrate that all 34 assertions pass with 0 failures against `clinicq-test.db` while preserving `clinicq.db`.
+4. **Reproducible Installation:**
+   - Demonstrate clean installation using `npm ci` and server startup using `npm start`.
 
 ---
 
-## 4. Screenshot Placeholders
+## 4. Placeholders for Genuine Student Evidence
 
-### Screenshot 6.1: Postman Collection Imported in Postman App
+### Evidence 6.1: Postman Collection Sidebar
+*Place genuine Postman screenshot showing the imported collection:*
 ```
-[ PLACEHOLDER: Screenshot of Postman sidebar showing the imported "ClinicQ Health Centre API - LG 8" collection with all 4 folders and requests ]
-```
-
-### Screenshot 6.2: Postman Collection Runner Passing Results
-```
-[ PLACEHOLDER: Screenshot of Postman Collection Runner executing all requests with green 200/201/400 status badges ]
+[ PLACEHOLDER: Insert screenshot of Postman sidebar showing "ClinicQ Health Centre API - LG 8" collection expanded with its 4 sub-folders ]
 ```
 
-### Screenshot 6.3: Automated Test Runner Terminal Output
+### Evidence 6.2: Postman Collection Runner Summary
+*Place genuine Postman Runner screenshot showing completed runs:*
 ```
-[ PLACEHOLDER: Screenshot of terminal running `npm test` showing 34 Passed and 0 Failed ]
+[ PLACEHOLDER: Insert screenshot of Postman Collection Runner execution results showing green status badges for all executed requests ]
+```
+
+### Evidence 6.3: Automated Test Suite Terminal Output
+*Place genuine terminal output from running `npm test`:*
+```
+[ PLACEHOLDER: Paste actual terminal output of `npm test` showing:
+  - Target database: clinicq-test.db
+  - Test execution logs
+  - Passed: 34, Failed: 0 ]
 ```
