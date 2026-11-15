@@ -1,12 +1,18 @@
 const path = require('path');
 const fs = require('fs');
 
-// STEP 1: Select separate test database BEFORE importing server.js or database.js
-const TEST_DB_PATH = path.join(__dirname, 'database', 'clinicq-test.db');
-process.env.NODE_ENV = 'test';
-process.env.DB_PATH = TEST_DB_PATH;
+// STEP 1: Explicitly set BOTH process.env.CLINICQ_DB_PATH and process.env.DB_PATH to clinicq-test.db BEFORE importing server.js or database.js
+const TEST_DB_PATH = path.resolve(__dirname, 'database', 'clinicq-test.db');
+const DEV_DB_PATH = path.resolve(__dirname, 'database', 'clinicq.db');
 
-// STEP 2: Import server and database modules (connected strictly to clinicq-test.db)
+process.env.CLINICQ_DB_PATH = TEST_DB_PATH;
+process.env.DB_PATH = TEST_DB_PATH;
+process.env.NODE_ENV = 'test';
+
+// Snapshot development database stats (if present) to verify it is never modified
+const devDbInitialStats = fs.existsSync(DEV_DB_PATH) ? fs.statSync(DEV_DB_PATH) : null;
+
+// STEP 2: Import server and database modules (they will connect strictly to clinicq-test.db)
 const { app } = require('./server');
 const { db, initializeDatabase, dbPath } = require('./database');
 
@@ -18,28 +24,41 @@ async function runTests() {
   console.log('   ClinicQ Health Centre - Automated Test Runner     ');
   console.log('=====================================================\n');
 
-  console.log(`[Test Config] Target Database: ${dbPath}`);
-  if (!dbPath.endsWith('clinicq-test.db')) {
-    console.error('CRITICAL SAFETY FAILURE: Test runner is not using clinicq-test.db!');
+  console.log(`[Test Config] Resolved dbPath:       ${path.resolve(dbPath)}`);
+  console.log(`[Test Config] Target TEST_DB_PATH:   ${TEST_DB_PATH}`);
+
+  // Abort immediately if the resolved database path does not match TEST_DB_PATH
+  if (path.resolve(dbPath) !== TEST_DB_PATH) {
+    console.error('\nCRITICAL DATABASE SAFETY FAILURE:');
+    console.error(`Resolved dbPath (${path.resolve(dbPath)}) does not match expected TEST_DB_PATH (${TEST_DB_PATH})!`);
+    console.error('Aborting test runner immediately to protect development database.');
     process.exit(1);
   }
+
+  console.log('[Test Config] Confirmed: Database path matches test database exactly.');
   console.log('[Test Config] Confirmed: Development database (clinicq.db) is protected and untouched.\n');
 
-  // Initialize DB and clean up tables exclusively in clinicq-test.db for a predictable test run
+  // STEP 3: Ensure test database initialization completes before requests execute
   await initializeDatabase();
-  await new Promise((resolve) => {
+  await new Promise((resolve, reject) => {
     db.serialize(() => {
-      db.run('DELETE FROM bookings', () => {});
-      db.run('DELETE FROM rooms', () => {});
-      db.run('DELETE FROM doctors', () => {});
-      db.run('DELETE FROM sqlite_sequence WHERE name IN ("bookings", "rooms", "doctors")', () => {
+      db.run('DELETE FROM bookings', (err) => { if (err) return reject(err); });
+      db.run('DELETE FROM rooms', (err) => { if (err) return reject(err); });
+      db.run('DELETE FROM doctors', (err) => { if (err) return reject(err); });
+      db.run('DELETE FROM sqlite_sequence WHERE name IN ("bookings", "rooms", "doctors")', (err) => {
+        if (err) return reject(err);
         resolve();
       });
     });
   });
 
-  const server = app.listen(PORT, () => {
-    console.log(`[Test Server] Started on ${BASE_URL}\n`);
+  // Start HTTP test server
+  let server;
+  await new Promise((resolve) => {
+    server = app.listen(PORT, () => {
+      console.log(`[Test Server] Started on ${BASE_URL}\n`);
+      resolve();
+    });
   });
 
   let testsPassed = 0;
@@ -355,8 +374,25 @@ async function runTests() {
     console.error('Fatal error during test run:', err);
     process.exitCode = 1;
   } finally {
-    server.close();
-    db.close();
+    // Reliably close HTTP test server and database connection
+    if (server) {
+      await new Promise((resolve) => server.close(resolve));
+      console.log('\n[Cleanup] HTTP test server closed reliably.');
+    }
+    if (db) {
+      await new Promise((resolve) => db.close(resolve));
+      console.log('[Cleanup] SQLite test database connection closed reliably.');
+    }
+
+    // Safety verification: confirm development database was never modified
+    if (devDbInitialStats && fs.existsSync(DEV_DB_PATH)) {
+      const finalStats = fs.statSync(DEV_DB_PATH);
+      if (finalStats.mtimeMs === devDbInitialStats.mtimeMs && finalStats.size === devDbInitialStats.size) {
+        console.log('[Safety Confirmed] Development database (clinicq.db) was not modified or deleted during test run.');
+      } else {
+        console.warn('[Safety Warning] Development database stats changed!');
+      }
+    }
   }
 }
 

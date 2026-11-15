@@ -15,10 +15,9 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# SQLite temporary database and journal files
-database/*-test.db
-database/*.test.db
-*.test.db
+# SQLite database and temporary files (development & test databases)
+database/*.db
+*.db
 *.db-journal
 *.db-wal
 *.db-shm
