@@ -18,21 +18,26 @@
 As the REST API specialist for LG 8, Tejaswini's assigned responsibilities included:
 1. **Room REST APIs (CRUD Operations in `routes/rooms.js`):**
    - `GET /rooms/` (retrieve all consultation rooms).
+   - `GET /rooms/?floor=Ground` (filter rooms by floor).
    - `GET /rooms/:roomId/` (retrieve details of a specific room).
    - `POST /rooms/` (create a new room with HTTP 201 Created).
    - `PUT /rooms/:roomId/` (update an existing room with HTTP 200 OK).
    - `DELETE /rooms/:roomId/` (delete an unused room).
+   - **Floor Validation:** Only Ground, First, and Second are accepted. Invalid floor values return HTTP 400 with a message showing the allowed values.
 2. **Doctor Endpoints (`routes/doctors.js`):**
    - `GET /doctors/` (list all doctors).
    - `GET /doctors/:doctorId/` (retrieve a single doctor profile).
    - `POST /doctors/` (register a new doctor with HTTP 201 Created).
    - `PUT /doctors/:doctorId/` (update doctor details).
    - `DELETE /doctors/:doctorId/` (delete doctor with referential checks).
+      - Validate that doctor_name and specialization are provided as non-empty strings before registration or updating.
 3. **Booking Endpoints (`routes/bookings.js`):**
    - `POST /bookings/` (create booking with foreign key verification and conflict rejection).
    - `GET /bookings/` (list all bookings).
    - `GET /bookings/:bookingId/` (retrieve a single booking).
    - `DELETE /bookings/:bookingId/` (cancel / delete a booking).
+      - Verify that the selected doctor and room exist before creating a booking.
+   - Prevent double-booking by rejecting bookings when the same room or doctor is already scheduled at the same date and time.
 4. **Mandatory Multi-Table SQL JOIN Endpoint (`GET /bookings/details/`):**
    - Authoring an SQL `INNER JOIN` linking `bookings`, `doctors`, and `rooms` to output human-readable booking information with doctor and room names.
 
@@ -124,27 +129,29 @@ During the lab evaluation, Tejaswini should demonstrate and explain:
 
 ---
 
-## 4. Placeholders for Genuine Student Evidence
 
-### Evidence 3.1: Mandatory SQL JOIN Response (`GET /bookings/details/`)
-*Place genuine Postman response screenshot showing all 5 required fields:*
-```
-[ PLACEHOLDER: Insert screenshot of GET http://localhost:3000/bookings/details/ returning array containing:
-  - booking_id
-  - booking_date
-  - booking_time
-  - doctor_name
-  - room_name ]
-```
 
-### Evidence 3.2: Room CRUD Execution (`POST /rooms/` and `GET /rooms/:roomId/`)
-*Place genuine Postman screenshots showing room creation and retrieval:*
-```
-[ PLACEHOLDER: Insert screenshot of POST /rooms/ returning HTTP 201 Created and GET /rooms/1/ returning HTTP 200 OK ]
-```
 
-### Evidence 3.3: Doctor Registration (`POST /doctors/`)
-*Place genuine Postman screenshot showing doctor creation:*
-```
-[ PLACEHOLDER: Insert screenshot of POST /doctors/ returning HTTP 201 Created with doctor_id ]
-```
+## 4. Genuine Student Evidence
+
+### Evidence 3.1: SQL JOIN Response
+
+Postman response showing booking details with doctor and room names:
+
+
+![SQL JOIN Response](./screenshots/evidence-3-1-sql-join.png)
+
+
+### Evidence 3.2: Room CRUD Operations
+
+Room creation:
+
+![Room Creation](./screenshots/evidence-3-2-room-post.png)
+
+Room retrieval:
+
+![Room Retrieval](./screenshots/evidence-3-2-room-get.png)
+
+### Evidence 3.3: Doctor Registration
+
+![Doctor Registration](./screenshots/evidence-3-3-doctor-registration.png)
