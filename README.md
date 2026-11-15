@@ -1,7 +1,7 @@
 # ClinicQ Health Centre – LG 8
 ## Backend Development Fundamentals Group Assignment
 
-A robust, production-grade Node.js and Express.js REST API backend system for managing doctors, consultation rooms, and patient appointments at the ClinicQ Health Centre.
+A robust, production-grade Node.js and Express.js REST API Backend system for managing doctors, consultation rooms, and patient appointments at the ClinicQ Health Centre.
 
 ---
 
