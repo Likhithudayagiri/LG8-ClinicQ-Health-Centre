@@ -1,3 +1,10 @@
+/**
+ * ClinicQ Health Centre - Database Configuration and Schema Definition
+ * Group: LG 8
+ * Member 2: Bharath (Student ID: 252U1R3074)
+ * Focus: SQLite connection, schema design, foreign key checks, and unique constraints
+ */
+
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');

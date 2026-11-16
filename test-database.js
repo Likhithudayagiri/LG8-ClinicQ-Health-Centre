@@ -1,3 +1,10 @@
+/**
+ * ClinicQ Health Centre - Database Specialist Verification Suite
+ * Group: LG 8
+ * Member 2: Bharath (Student ID: 252U1R3074)
+ * Focus: Automated verification for foreign keys, schemas, table constraints, and unique slots
+ */
+
 const path = require('path');
 const fs = require('fs');
 

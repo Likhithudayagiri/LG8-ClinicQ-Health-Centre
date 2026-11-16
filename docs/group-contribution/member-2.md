@@ -286,3 +286,15 @@ Database health diagnostics: {
 All 34 system-wide integration assertions continue to pass with 0 failures:
 - Passed: **34**
 - Failed: **0**
+
+---
+
+## 5. Student Contribution Declaration
+- **Student Name:** Bharath
+- **Student ID:** 252U1R3074
+- **Group:** LG 8
+- **Role:** Database Specialist (Member 2)
+- **Assigned Module:** `database.js`, `test-database.js`, schema initialization, and foreign key enforcement
+- **Verification Status:** Verified all 22 database unit tests and 34 system integration tests passing with 0 failures.
+- **Pull Request Branch:** `member-2-database`
+
